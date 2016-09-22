@@ -12,6 +12,7 @@
     "forEachAsync": "^3.0.0",
     "imagemin": "^5.2.2",
     "imagemin-jpegoptim": "^5.0.0",
+    "imagemin-mozjpeg": "^6.0.0",
     "imagemin-pngquant": "^5.0.0"
   }
 }

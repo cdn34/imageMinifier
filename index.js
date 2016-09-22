@@ -1,5 +1,6 @@
 var imagemin = require('imagemin');
-var imageminJpegoptim = require('imagemin-jpegoptim');
+//var imageminJpegoptim = require('imagemin-jpegoptim');
+var imageminMozjpeg = require('imagemin-mozjpeg');
 var imageminPngquant = require('imagemin-pngquant');
 
 var forEachAsync = require('forEachAsync').forEachAsync;
@@ -22,36 +23,25 @@ function getDirectories(srcpath) {
 
 getDirectories('images');
 
-/*forEachAsync(directories, function (next, imagePath,indexFor) {
-    console.log(imagePath);
-    console.log('---------------');
-    imagemin([imagePath], 'build/images', {
-        use: [
-            imageminJpegoptim({size: '50%'}),
-            imageminPngquant({quality: '65-80'})
-        ]
-    }).then(files => {
-        console.log(files);
-        next();
-        //=> [{data: <Buffer 89 50 4e …>, path: 'build/images/foo.jpg'}, …]
-    });
-}).then(()=>{
-    console.log('All images minified');
-})*/
-
-directories.forEach((imagePath)=>{
-    var folders = imagePath.split('/');
+forEachAsync(directories, function (next, imagePath,indexFor) {
+var folders = imagePath.split('/');
     folders = folders.slice(0,folders.length-1);
     var path = folders.join("/")+'/';
     console.log(path);
     console.log('---------------');
     imagemin([imagePath], 'build/'+path, {
         plugins: [
-            imageminJpegoptim({size: '50%'}),
+            imageminMozjpeg(),
+            //imageminJpegoptim({size: '30%'}),
             imageminPngquant({quality: '40-45'})
         ]
     }).then(files => {
-        console.log(files);
         //=> [{data: <Buffer 89 50 4e …>, path: 'build/images/foo.jpg'}, …]
-    });
+        console.log(files);
+        next();
+    }).catch((err)=>{
+        console.log(err);
+    })
+}).then(()=>{
+    console.log('All images minified');
 });
